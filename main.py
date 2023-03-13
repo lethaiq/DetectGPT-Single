@@ -370,7 +370,7 @@ def load_base_model_and_tokenizer(name):
         base_model_kwargs.update(dict(torch_dtype=torch.float16))
     if 'gpt-j' in name:
         base_model_kwargs.update(dict(revision='float16'))
-    base_model = transformers.AutoModelForCausalLM.from_pretrained(name, **base_model_kwargs, cache_dir=cache_dir)
+    base_model = transformers.AutoModelForCausalLM.from_pretrained(name, **base_model_kwargs, device_map="auto", cache_dir=cache_dir)
 
     optional_tok_kwargs = {}
     if "facebook/opt-" in name:
@@ -446,8 +446,8 @@ if __name__ == '__main__':
     except AttributeError:
         n_positions = 512
 
-    base_model.to(DEVICE)
-    mask_model.to(DEVICE)
+#     base_model.to(DEVICE)
+#     mask_model.to(DEVICE)
         
     preproc_tokenizer = transformers.AutoTokenizer.from_pretrained('t5-small', model_max_length=512, cache_dir=cache_dir)
     mask_tokenizer = transformers.AutoTokenizer.from_pretrained(mask_filling_model_name, model_max_length=n_positions, cache_dir=cache_dir)
